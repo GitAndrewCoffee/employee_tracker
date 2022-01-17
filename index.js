@@ -7,6 +7,7 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql12');
 const cTable = require('console.table');
+const prompts = require('./js/questions');
 
 //
 // Database Connection
@@ -42,19 +43,32 @@ function mainPrompt() {
             'update employee'
         ]
 
-    }).then(selection => {
+    }).then( function(input) {
 
-
+        switch (input.option) {
+            case 'view all departments':
+                displayDepartments();
+                break;
+            case "view all roles":
+                displayRoles();
+                break;
+            case "view all employees":
+                displayEmployees();
+                break;
+            case "add a department":
+                addDepartment();
+                break;
+            case "add a role":
+                addRole();
+                break;
+            case "add an employee":
+                addEmployee();
+                break;
+            case "update employee":
+                updateEmployee();
+                break;
+        }
     })
-
-    // Main Prompt
-    //View All Departments
-    //View all roles
-    //View all employees
-    //Add a department
-    //Add a role
-    //add an employee
-    //Update an employee role
 }
 
 
@@ -99,10 +113,38 @@ function displayEmployees() {
     });
 };
 
-//Add Department
-    //Prompt for Department Info
-    //Save to Database
-    //Return to Prompt
+function addDepartment() {
+
+    inquirer.prompt("What is the new Department's Name?")
+    .then(newName => {
+        db.query('INSERT INTO department (name) VALUES (?)',newName, (err, res) =>{
+            if (err) {
+                console.log('there was an error saving the new Department')
+                throw err;
+            }
+            console.log(`New Daprtment ${newName} has been saved`)
+            mainPrompt();
+        });
+    });    
+}
+
+
+function addRole() {
+
+    inquirer.prompt("What is the new Role's Title?")
+    .then(newName => {
+        
+        
+        db.query('INSERT INTO department (name) VALUES (?)',newValue, (err, res) =>{
+            if (err) {
+                console.log('there was an error saving the new role')
+                throw err;
+            }
+            console.log(`New Daprtment ${newValuw} has been saved`)
+            mainPrompt();
+        });
+    });    
+}
 
 //Add Role
     //Prompt for Role Info
