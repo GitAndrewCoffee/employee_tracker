@@ -100,7 +100,7 @@ function displayRoles() {
     });
 };
 
-function displayEmployees() {
+function displayEmployees(nextStep) {
     var queryMe = 'SELECT * FROM employees;'
 
     db.query(queryMe, (err, res) =>{
@@ -109,7 +109,12 @@ function displayEmployees() {
             throw err;
         }
         console.table(res);
-        mainPrompt();
+        if (nextStep = 'main') {
+            mainPrompt();
+        } else {
+            return "disply employees is complete";
+        }
+        
     });
 };
 
@@ -131,33 +136,54 @@ function addDepartment() {
 
 function addRole() {
 
-    inquirer.prompt("What is the new Role's Title?")
-    .then(newName => {
-        
-        
-        db.query('INSERT INTO department (name) VALUES (?)',newValue, (err, res) =>{
+    inquirer.prompt(prompts.rolePrompts)
+    .then(newRole => {
+                
+        db.query('INSERT INTO role (title, salary, department_id) VALUES (?)',newRole, (err, res) =>{
             if (err) {
                 console.log('there was an error saving the new role')
                 throw err;
             }
-            console.log(`New Daprtment ${newValuw} has been saved`)
+            console.log(`New Role ${newRole.title} has been saved`)
+            mainPrompt();
+        });
+    });    
+}
+function addEmployee() {
+
+    inquirer.prompt(prompts.employeePrompts)
+    .then(newValue => {       
+        
+        db.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?)',newValue, (err, res) =>{
+            if (err) {
+                console.log('there was an error saving the new employee')
+                throw err;
+            }
+            console.log(`New Employee ${newValue} has been saved`)
             mainPrompt();
         });
     });    
 }
 
-//Add Role
-    //Prompt for Role Info
-    //Save to Database
-    //Return to Prompt
+function updateEmployee() {
 
-//Add Employee
-    //Prompt for Employee Info
-    //Save to Database
-    //Return to Prompt
+    displayEmployees('none');
+        
+    inquirer.prompt(prompts.updateEmpPrompts)
+    .then(newValue => {       
+        
+        checkedID = newValue.id * 10;
+        checkedID = checkedID / 10;
 
-//Update Employee
-    //Prompt Employee Info
-    //Save to Database
-    //Return to Prompt
+        queryTxt = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?) WHERE id = ${checkedID}`;
 
+        db.query(queryTxt, [newValue.first_name, newValue.last_name, newValue.role_id, newValue.manager_id], (err, res) =>{
+            if (err) {
+                console.log('there was an error saving the new employee')
+                throw err;
+            }
+            console.log(`New Employee ${checkedID} has been saved`)
+            mainPrompt();
+        });
+    });    
+}

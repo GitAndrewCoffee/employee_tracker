@@ -13,7 +13,7 @@ var rolePrompts = [
     },
     {
         type : 'input',
-        name : 'department',
+        name : 'department_id',
         message : 'Enter the ID of the related department'
     }
 ];
@@ -21,24 +21,52 @@ var rolePrompts = [
 var employeePrompts = [
     {
         type : 'input',
-        name : 'firstName',
+        name : 'first_name',
         message : 'Enter the employee First Name'        
     },
     {
         type : 'input',
-        name : 'lastName',
+        name : 'last_name',
         message : 'Enter the employee Last Name'
     },
     {
         type : 'input',
-        name : 'role',
+        name : 'role_id',
         message : 'Enter the ID of the related role'
     },
     {
         type : 'input',
-        name : 'manager',
+        name : 'manager_id',
         message : 'Enter the ID of the manager'
     }
 ];
 
-export {rolePrompts, employeePrompts}
+var updateEmpPrompts = [
+    {
+        type : 'input',
+        name : 'ID',
+        message : 'Enter the employee ID'        
+    },
+    {
+        type : 'input',
+        name : 'first_name',
+        message : 'Enter the employee First Name'        
+    },
+    {
+        type : 'input',
+        name : 'last_name',
+        message : 'Enter the employee Last Name'
+    },
+    {
+        type : 'input',
+        name : 'role_id',
+        message : 'Enter the ID of the related role'
+    },
+    {
+        type : 'input',
+        name : 'manager_id',
+        message : 'Enter the ID of the manager'
+    }
+];
+
+export {rolePrompts, employeePrompts, updateEmpPrompts}
