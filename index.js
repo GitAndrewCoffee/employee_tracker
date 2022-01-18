@@ -187,3 +187,9 @@ function updateEmployee() {
         });
     });    
 }
+
+//
+// Application Start Up
+//
+
+mainPrompt();
