@@ -5,7 +5,7 @@
 //NPM Packages
 
 const inquirer = require('inquirer');
-const mysql = require('mysql12');
+const mysql = require('mysql2');
 const cTable = require('console.table');
 const prompts = require('./js/questions');
 
@@ -29,6 +29,8 @@ const db = mysql.createConnection(
 
 function mainPrompt() {
     
+    console.log('mainPrompt() is running')
+
     inquirer.prompt( {
         type: 'list',
         message: 'select an option:',
@@ -43,8 +45,8 @@ function mainPrompt() {
             'update employee'
         ]
 
-    }).then( function(input) {
-
+    }).then( input => {
+        console.log(`input is ${input.option}`);
         switch (input.option) {
             case 'view all departments':
                 displayDepartments();
@@ -112,7 +114,7 @@ function displayEmployees(nextStep) {
         if (nextStep = 'main') {
             mainPrompt();
         } else {
-            return "disply employees is complete";
+            return "display employees is complete";
         }
         
     });
@@ -127,7 +129,7 @@ function addDepartment() {
                 console.log('there was an error saving the new Department')
                 throw err;
             }
-            console.log(`New Daprtment ${newName} has been saved`)
+            console.log(`New Department ${newName} has been saved`)
             mainPrompt();
         });
     });    
