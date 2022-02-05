@@ -9,6 +9,17 @@ const mysql = require('mysql2');
 const cTable = require('console.table');
 const prompts = require('./js/questions');
 
+//constants
+
+const menuOptions = ['view all departments',
+'view all roles',
+'view all employees',
+'add a department',
+'add a role',
+'add an employee',
+'update employee']
+
+
 //
 // Database Connection
 //
@@ -17,7 +28,7 @@ const db = mysql.createConnection(
     {
       host: 'localhost',
       user: 'root',
-      password: 'root',
+      password: 'rootroot',
       database: 'employee_tracker'
     },
     console.log('Connected to the employee_tracker database.')
@@ -29,52 +40,44 @@ const db = mysql.createConnection(
 
 function mainPrompt() {
     
-    console.log('mainPrompt() is running')
+    console.log('mainPrompt() is running');
 
-    inquirer.prompt( {
+    const mainMenu = {
         type: 'list',
         message: 'select an option:',
         name: 'option',
-        choices: [
-            'view all departments',
-            'view all roles',
-            'view all employees',
-            'add a department',
-            'add a role',
-            'add an employee',
-            'update employee'
-        ]
-
-    }).then( input => {
-        console.log(`input is ${input.option}`);
-        switch (input.option) {
-            case 'view all departments':
+        choices: menuOptions
+        };
+        
+    inquirer.prompt([mainMenu]).then(data => {
+        console.log(`You chose ${data.option}`);    
+        if (data.option == menuOptions[0]) {
                 displayDepartments();
-                break;
-            case "view all roles":
+            } else if (data.option == menuOptions[1]) {
                 displayRoles();
-                break;
-            case "view all employees":
+            } else if (data.option == menuOptions[2]) {
                 displayEmployees();
-                break;
-            case "add a department":
+            } else if (data.option == menuOptions[3]) {
                 addDepartment();
-                break;
-            case "add a role":
+            } else if (data.option == menuOptions[4]) {
                 addRole();
-                break;
-            case "add an employee":
+            } else if (data.option == menuOptions[5]) {
                 addEmployee();
-                break;
-            case "update employee":
+            } else if (data.option == menuOptions[6]) {
                 updateEmployee();
-                break;
-        }
-    })
-}
+            } else {
+                console.log("Invalid Option");
+                mainMenu();
+            }
+        }).catch(err => {
+            console.log(err);
+        });
+};
 
 
 function displayDepartments() {
+
+    console.log('Display Department is running');
 
     var queryMe = 'SELECT * FROM department;'
 
@@ -83,7 +86,7 @@ function displayDepartments() {
             console.log('there was an error loading departments')
             throw err;
         }
-        console.table(res);
+        console.log(res);
         mainPrompt();
     });
 };
@@ -122,14 +125,20 @@ function displayEmployees(nextStep) {
 
 function addDepartment() {
 
-    inquirer.prompt("What is the new Department's Name?")
-    .then(newName => {
-        db.query('INSERT INTO department (name) VALUES (?)',newName, (err, res) =>{
+    const promptMe = {
+        type: 'input',
+        name: 'dep',
+        message: 'What is the new department name?'    
+    }
+
+    inquirer.prompt(promptMe)
+    .then(userInput => {
+        db.query('INSERT INTO department (dep) VALUES (?)',userInput.dep, (err, res) =>{
             if (err) {
                 console.log('there was an error saving the new Department')
                 throw err;
             }
-            console.log(`New Department ${newName} has been saved`)
+            console.log(`New Department ${userInput.dep} has been saved`)
             mainPrompt();
         });
     });    
