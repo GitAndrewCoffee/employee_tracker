@@ -17,7 +17,8 @@ const menuOptions = ['view all departments',
 'add a department',
 'add a role',
 'add an employee',
-'update employee']
+'update employee',
+'quit']
 
 
 //
@@ -65,6 +66,8 @@ function mainPrompt() {
                 addEmployee();
             } else if (data.option == menuOptions[6]) {
                 updateEmployee();
+            } else if (data.option == menuOptions[7]) {
+                process.exit();
             } else {
                 console.log("Invalid Option");
                 mainMenu();
@@ -86,7 +89,7 @@ function displayDepartments() {
             console.log('there was an error loading departments')
             throw err;
         }
-        console.log(res);
+        console.table(res);
         mainPrompt();
     });
 };
@@ -106,7 +109,7 @@ function displayRoles() {
 };
 
 function displayEmployees(nextStep) {
-    var queryMe = 'SELECT * FROM employees;'
+    var queryMe = 'SELECT * FROM employee;'
 
     db.query(queryMe, (err, res) =>{
         if (err) {
@@ -148,14 +151,14 @@ function addDepartment() {
 function addRole() {
 
     inquirer.prompt(prompts.rolePrompts)
-    .then(newRole => {
+    .then(userInput => {
                 
-        db.query('INSERT INTO role (title, salary, department_id) VALUES (?)',newRole, (err, res) =>{
+        db.query('INSERT INTO role SET ?',userInput, (err, res) =>{
             if (err) {
                 console.log('there was an error saving the new role')
                 throw err;
             }
-            console.log(`New Role ${newRole.title} has been saved`)
+            console.log(`New Role ${userInput.title} has been saved`)
             mainPrompt();
         });
     });    
@@ -163,37 +166,32 @@ function addRole() {
 function addEmployee() {
 
     inquirer.prompt(prompts.employeePrompts)
-    .then(newValue => {       
+    .then(userInput => {       
         
-        db.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?)',newValue, (err, res) =>{
+        db.query('INSERT INTO employee SET ?',userInput, (err, res) =>{
             if (err) {
                 console.log('there was an error saving the new employee')
                 throw err;
             }
-            console.log(`New Employee ${newValue} has been saved`)
+            console.log(`New Employee ${userInput.first_name} ${userInput.last_name} has been saved`)
             mainPrompt();
         });
     });    
 }
 
 function updateEmployee() {
-
-    displayEmployees('none');
-        
+       
     inquirer.prompt(prompts.updateEmpPrompts)
-    .then(newValue => {       
+    .then(userInput => {       
         
-        checkedID = newValue.id * 10;
-        checkedID = checkedID / 10;
+        queryTxt = `UPDATE employee SET ? WHERE id = ${userInput.ID}`;
 
-        queryTxt = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?) WHERE id = ${checkedID}`;
-
-        db.query(queryTxt, [newValue.first_name, newValue.last_name, newValue.role_id, newValue.manager_id], (err, res) =>{
+        db.query(queryTxt, userInput, (err, res) =>{
             if (err) {
                 console.log('there was an error saving the new employee')
                 throw err;
             }
-            console.log(`New Employee ${checkedID} has been saved`)
+            console.log(`New Employee ${userInput.ID} has been saved`)
             mainPrompt();
         });
     });    

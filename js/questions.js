@@ -1,5 +1,3 @@
-const inquirer = require('inquirer');
-
 const rolePrompts = [
     {
         type : 'input',
@@ -69,4 +67,4 @@ const updateEmpPrompts = [
     }
 ];
 
-module.export = {rolePrompts, employeePrompts, updateEmpPrompts}
+module.exports = {rolePrompts, employeePrompts, updateEmpPrompts}
